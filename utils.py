@@ -53,22 +53,35 @@ def find_and_right_click(screenshot, alteration_template):
         return True
     return False
 
-def find_and_lef_click(screenshot, alteration_template):
-    gray_screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2GRAY)
-    res = cv2.matchTemplate(gray_screenshot, alteration_template, cv2.TM_CCOEFF_NORMED)
-    threshold = 0.8
-    loc = np.where(res >= threshold)
+def click_in_fixed_region(game_window, region):
+    """
+    Clicks in the center of a predefined region in the game window.
     
-    if len(loc[0]) > 0:
-        # Get the position of the first match
-        top_left = (loc[1][0], loc[0][0])  # x, y of the first matched point
-        # Find the center of the alteration for a precise click
-        h, w = alteration_template.shape[:2]
-        center_x = top_left[0] + w // 2
-        center_y = top_left[1] + h // 2
-        
-        # Simulate a right-click at the center of the alteration
-        pyautogui.leftClick(center_x, center_y)
-        print(f"Left-clicked at position: ({center_x}, {center_y})")
-        return True
-    return False
+    :param game_window: The game window object.
+    :param region: A tuple (left, top, width, height) representing the region relative to the game window.
+    """
+    # Get the top-left position of the game window on the screen
+    window_left, window_top = game_window.left, game_window.top
+
+    # Region is relative to the game window, so add the window's position
+    left, top, width, height = region
+    absolute_left = window_left + left
+    absolute_top = window_top + top
+
+    # Calculate the center of the region in absolute screen coordinates
+    center_x = absolute_left + width // 2
+    center_y = absolute_top + height // 2
+
+    # Simulate a left-click at the center of the region
+    time.sleep(0.1)
+    pyautogui.leftClick(center_x, center_y)
+    print(f"Left-clicked at position: ({center_x}, {center_y})")
+    return True
+
+def move_mouse_away():
+    """
+    Move the mouse to a location that does not interfere with the game UI.
+    """
+    pyautogui.moveTo(600, 600) 
+
+
