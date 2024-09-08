@@ -4,7 +4,7 @@ import time
 import numpy as np
 import mss
 import pyautogui
-
+import random
 
 def get_game_window(title):
     try:
@@ -46,12 +46,17 @@ def find_and_right_click(screenshot, alteration_template):
         h, w = alteration_template.shape[:2]
         center_x = top_left[0] + w // 2
         center_y = top_left[1] + h // 2
+
+        # Randomize the duration of mouse movement
+        random_duration = random.uniform(0.1, 0.4)
         
-        # Simulate a right-click at the center of the alteration
-        pyautogui.rightClick(center_x, center_y)
-        print(f"Right-clicked at position: ({center_x}, {center_y})")
+        # Simulate a right-click at the center of the alteration with randomized movement speed
+        pyautogui.moveTo(center_x, center_y, duration=random_duration)
+        pyautogui.rightClick()
+        print(f"Right-clicked at position: ({center_x}, {center_y}) with duration {random_duration:.2f} seconds")
         return True
     return False
+
 
 def click_in_fixed_region(game_window, region):
     """
@@ -71,10 +76,11 @@ def click_in_fixed_region(game_window, region):
     # Calculate the center of the region in absolute screen coordinates
     center_x = absolute_left + width // 2
     center_y = absolute_top + height // 2
-
+    random_duration = random.uniform(0.1, 0.4)
     # Simulate a left-click at the center of the region
     time.sleep(0.1)
-    pyautogui.leftClick(center_x, center_y)
+    pyautogui.moveTo(center_x, center_y, duration=random_duration)
+    pyautogui.leftClick()
     print(f"Left-clicked at position: ({center_x}, {center_y})")
     return True
 
@@ -82,6 +88,7 @@ def move_mouse_away():
     """
     Move the mouse to a location that does not interfere with the game UI.
     """
-    pyautogui.moveTo(600, 600) 
+    random_duration = random.uniform(0.1, 0.4)
+    pyautogui.moveTo(600, 600,  duration=random_duration) 
 
 
